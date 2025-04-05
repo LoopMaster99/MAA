@@ -17,6 +17,7 @@ fun AppNavigation(navController: NavHostController) {
     NavHost(navController = navController, startDestination = "splash") {
         composable("splash") { SplashScreen(navController) }
         composable("onboarding") { OnboardingScreen(navController) }
+        composable("Register") { RegisterScreen(navController) }
         composable("signIn") { SignInScreen(navController) }
         composable("signUp") { SignUpScreen(navController) }
         composable("home") {
