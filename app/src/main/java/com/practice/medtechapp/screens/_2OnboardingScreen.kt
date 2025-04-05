@@ -23,6 +23,9 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.navigation.compose.rememberNavController
 import kotlinx.coroutines.launch
 import com.practice.medtechapp.components.DotsIndicator
 import com.practice.medtechapp.ui.theme.AppTypography
@@ -88,4 +91,10 @@ fun OnboardingScreen(navController: NavController) {
 
         Spacer(modifier = Modifier.height(32.dp))
     }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun OnboardingScreenPagePreview(){
+    OnboardingScreen(navController = rememberNavController())
 }
