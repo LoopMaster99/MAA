@@ -1,61 +1,63 @@
 package com.practice.medtechapp.components
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Check
+import androidx.compose.material.icons.filled.Close
+import androidx.compose.material.icons.filled.Home
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.practice.medtechapp.ui.theme.CardBackground
-import com.practice.medtechapp.ui.theme.CardBorder
+import com.practice.medtechapp.data.Medication
+import com.practice.medtechapp.ui.theme.PrimaryDark
+import com.practice.medtechapp.ui.theme.PrimaryLight
 import com.practice.medtechapp.ui.theme.TextColor
 
 @Composable
 fun MedicationCard(
-    medicationName: String,
-    time: String,
-    modifier: Modifier = Modifier,
-    status: String? = null // Can be "taken", "missed", or null for pending
+    medication: Medication,
+    isSelected: Boolean,
+    modifier: Modifier = Modifier
 ) {
-    // Determine the card's background color based on medication status
-    val cardColor = when (status) {
-        "taken" -> Color(0xFFE8F5E9) // Light green for taken medications
-        "missed" -> Color(0xFFFFEBEE) // Light red for missed medications
-        else -> Color(0xFFF8F3EA)      // Custom background for pending medications
+    val cardColor = when(medication.status) {
+        "taken" -> Color(0xFFE8F5E9)  // Light green background for taken
+        "missed" -> Color(0xFFFFEBEE)  // Light red background for missed
+        else -> Color.White
     }
 
-    val borderColor = when (status) {
-        "taken" -> Color(0xFF81C784) // Medium green border
-        "missed" -> Color(0xFFEF9A9A) // Medium red border
-        else -> Color(0xFFC5B39A)     // Darker border than CardBorder
+    val timeColor = when {
+        medication.time.contains("now", ignoreCase = true) -> Color(0xFFE53935)  // Red for "now"
+        medication.time.contains("soon", ignoreCase = true) -> Color(0xFFFF9800)  // Orange for "soon"
+        else -> Color(0xFF616161)  // Regular gray for other times
     }
 
     Card(
         modifier = modifier
-            .fillMaxWidth(0.9f)
-            .padding(vertical = 6.dp)
-            .border(width = 1.dp, color = borderColor, shape = RoundedCornerShape(12.dp)),
-        shape = RoundedCornerShape(12.dp),
-        elevation = CardDefaults.cardElevation(defaultElevation = 3.dp), // Increased elevation
-        colors = CardDefaults.cardColors(containerColor = cardColor)
+            .fillMaxWidth()
+            .heightIn(min = 80.dp),
+        colors = CardDefaults.cardColors(containerColor = cardColor),
+        elevation = CardDefaults.cardElevation(defaultElevation = if (isSelected) 4.dp else 1.dp),
+        shape = RoundedCornerShape(12.dp)
     ) {
         Row(
             modifier = Modifier
@@ -63,51 +65,67 @@ fun MedicationCard(
                 .padding(16.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
+            // Pill icon or medication type icon
+            Box(
+                modifier = Modifier
+                    .size(48.dp)
+                    .background(PrimaryLight.copy(alpha = 0.2f), CircleShape),
+                contentAlignment = Alignment.Center
+            ) {
+                Icon(
+                    imageVector = Icons.Default.Home,
+                    contentDescription = null,
+                    tint = PrimaryDark,
+                    modifier = Modifier.size(24.dp)
+                )
+            }
+
+            Spacer(modifier = Modifier.width(16.dp))
+
+            // Medication details
             Column(modifier = Modifier.weight(1f)) {
                 Text(
-                    text = medicationName,
+                    text = medication.name,
                     style = MaterialTheme.typography.titleMedium,
-                    fontWeight = FontWeight.Bold,
-                    color = TextColor  // Use your custom text color defined in your theme
+                    color = TextColor
                 )
 
                 Spacer(modifier = Modifier.height(4.dp))
 
                 Text(
-                    text = "Time: $time",
+                    text = medication.dose,
                     style = MaterialTheme.typography.bodyMedium,
-                    color = Color.Gray
+                    color = Color(0xFF757575)
+                )
+            }
+
+            // Time indicator
+            Column(horizontalAlignment = Alignment.End) {
+                Text(
+                    text = medication.time,
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = timeColor,
+                    fontWeight = FontWeight.Bold
                 )
 
-                // Display medication status if available
-                if (status != null) {
+                // Status indicator if already taken or missed
+                if (medication.status == "taken" || medication.status == "missed") {
                     Spacer(modifier = Modifier.height(4.dp))
                     Row(verticalAlignment = Alignment.CenterVertically) {
-                        Box(
-                            modifier = Modifier
-                                .size(8.dp)
-                                .clip(RoundedCornerShape(4.dp))
-                                .background(
-                                    when (status) {
-                                        "taken" -> Color(0xFF4CAF50)
-                                        "missed" -> Color(0xFFE53935)
-                                        else -> Color.Gray
-                                    }
-                                )
+                        Icon(
+                            imageVector = if (medication.status == "taken")
+                                Icons.Default.Check else Icons.Default.Close,
+                            contentDescription = null,
+                            tint = if (medication.status == "taken")
+                                Color(0xFF4CAF50) else Color(0xFFE53935),
+                            modifier = Modifier.size(16.dp)
                         )
                         Spacer(modifier = Modifier.width(4.dp))
                         Text(
-                            text = when (status) {
-                                "taken" -> "Taken"
-                                "missed" -> "Missed"
-                                else -> "Pending"
-                            },
+                            text = if (medication.status == "taken") "Taken" else "Missed",
                             style = MaterialTheme.typography.bodySmall,
-                            color = when (status) {
-                                "taken" -> Color(0xFF4CAF50)
-                                "missed" -> Color(0xFFE53935)
-                                else -> Color.Gray
-                            }
+                            color = if (medication.status == "taken")
+                                Color(0xFF4CAF50) else Color(0xFFE53935)
                         )
                     }
                 }
@@ -116,12 +134,10 @@ fun MedicationCard(
     }
 }
 
-@Preview(showBackground = true)
-@Composable
-fun MedicationCardPreview() {
-    MedicationCard(
-        medicationName = "Aspirin",
-        time = "8:00 AM",
-        status = "taken" // Example status
-    )
-}
+//@Preview(showBackground = true)
+//@Composable
+//fun MedicationCardPreview() {
+//    MedicationCard(
+//
+//    )
+//}

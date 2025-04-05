@@ -4,7 +4,7 @@ import android.annotation.SuppressLint
 import androidx.compose.animation.core.animateFloat
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.core.updateTransition
-import androidx.compose.foundation.Image
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -20,9 +20,18 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowForward
+import androidx.compose.material.icons.filled.Check
+import androidx.compose.material.icons.filled.Close
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
@@ -36,13 +45,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.practice.medtechapp.R
 import com.practice.medtechapp.data.Medication
+import com.practice.medtechapp.ui.theme.PrimaryDark
 import com.practice.medtechapp.ui.theme.SecondaryDark
-import com.practice.medtechapp.ui.theme.SecondaryLight
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
@@ -53,7 +59,34 @@ fun MedicationIntakeSlider(
     onMedicationTaken: (Medication) -> Unit,
     onMedicationMissed: (Medication) -> Unit
 ) {
-    if (medications.isEmpty()) return
+    if (medications.isEmpty()) {
+        // Display empty state
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(150.dp)
+                .clip(RoundedCornerShape(12.dp))
+                .background(Color(0xFFF5F5F5))
+                .border(1.dp, Color(0xFFEEEEEE), RoundedCornerShape(12.dp)),
+            contentAlignment = Alignment.Center
+        ) {
+            Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                Icon(
+                    imageVector = Icons.Default.Check,
+                    contentDescription = null,
+                    tint = Color(0xFFBDBDBD),
+                    modifier = Modifier.size(36.dp)
+                )
+                Spacer(modifier = Modifier.height(8.dp))
+                Text(
+                    "No medications scheduled",
+                    style = MaterialTheme.typography.bodyLarge,
+                    color = Color(0xFF9E9E9E)
+                )
+            }
+        }
+        return
+    }
 
     var currentMedicationIndex by remember { mutableStateOf(0) }
     val currentMedication = medications[currentMedicationIndex]
@@ -71,16 +104,15 @@ fun MedicationIntakeSlider(
     ) { 1f }
 
     Column(modifier = Modifier.fillMaxWidth()) {
-        // Dynamic medication cards
+        // Dynamic medication cards with swipeable functionality
         medications.forEachIndexed { index, medication ->
             val isSelected = index == currentMedicationIndex
 
             Box(modifier = Modifier.fillMaxWidth()) {
                 // The medication card
                 MedicationCard(
-                    medicationName = medication.name,
-                    time = medication.scheduledTime,
-                    status = medication.status,
+                    medication = medication,
+                    isSelected = isSelected,
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(vertical = 4.dp)
@@ -100,25 +132,26 @@ fun MedicationIntakeSlider(
                             )
                     )
 
-                    // Swipe hints
+                    // Swipe hints - now with more subtle visual guidance
                     Row(
                         modifier = Modifier
                             .matchParentSize()
-                            .padding(horizontal = 8.dp),
+                            .padding(horizontal = 12.dp),
                         horizontalArrangement = Arrangement.End,
                         verticalAlignment = Alignment.CenterVertically
                     ) {
-                        Image(
-                            painter = painterResource(id = R.drawable.light_bulb),
-                            contentDescription = "Taken",
-                            modifier = Modifier.size(30.dp)
+                        Icon(
+                            imageVector = Icons.AutoMirrored.Filled.ArrowForward,
+                            contentDescription = "Swipe to act",
+                            tint = SecondaryDark.copy(alpha = 0.5f),
+                            modifier = Modifier.size(24.dp)
                         )
                     }
                 }
             }
         }
 
-        Spacer(modifier = Modifier.height(16.dp))
+        Spacer(modifier = Modifier.height(12.dp))
 
         // Medication navigation with dot indicators
         Row(
@@ -136,67 +169,93 @@ fun MedicationIntakeSlider(
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        // Current medication action buttons
-        Row(
+        // Current medication action buttons - redesigned for better visual hierarchy
+        Card(
             modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceEvenly
+            colors = CardDefaults.cardColors(containerColor = Color(0xFFF5EFE6)),
+            elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
         ) {
-            // Taken button
-            Button(
-                onClick = {
-                    confirmationType = "taken"
-                    showConfirmationDialog = true
-                },
-                colors = ButtonDefaults.buttonColors(
-                    containerColor = Color.Transparent
-                ),
-                modifier = Modifier.weight(1f).padding(end = 8.dp)
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(12.dp),
+                horizontalArrangement = Arrangement.SpaceEvenly
             ) {
-                Image(
-                    painter = painterResource(id = R.drawable.check_mark), // Replace with your PNG resource
-                    contentDescription = "Taken",
-                    modifier = Modifier.size(45.dp)
-                )
-                Spacer(modifier = Modifier.width(6.dp))
-                Text("Mark as Taken", color = SecondaryDark)
-            }
+                // Taken button - now more visually distinct
+                Button(
+                    onClick = {
+                        confirmationType = "taken"
+                        showConfirmationDialog = true
+                    },
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = Color(0xFF4CAF50)
+                    ),
+                    shape = RoundedCornerShape(8.dp),
+                    modifier = Modifier.weight(1f).padding(end = 8.dp)
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.Check,
+                        contentDescription = "Taken",
+                        tint = Color.White
+                    )
+                    Spacer(modifier = Modifier.width(4.dp))
+                    Text("Mark as Taken", color = Color.White)
+                }
 
-            // Missed button
-            Button(
-                onClick = {
-                    confirmationType = "missed"
-                    showConfirmationDialog = true
-                },
-                colors = ButtonDefaults.buttonColors(
-                    containerColor = Color.Transparent
-                ),
-                modifier = Modifier.weight(1f).padding(start = 8.dp)
-            ) {
-                Image(
-                    painter = painterResource(id = R.drawable.cross2), // Replace with your PNG resource
-                    contentDescription = "Missed",
-                    modifier = Modifier.size(45.dp)
-                )
-                Spacer(modifier = Modifier.width(6.dp))
-                Text("Mark as Missed", color = SecondaryDark)
+                // Missed button
+                OutlinedButton(
+                    onClick = {
+                        confirmationType = "missed"
+                        showConfirmationDialog = true
+                    },
+                    border = BorderStroke(1.dp, Color(0xFFE53935)),
+                    shape = RoundedCornerShape(8.dp),
+                    modifier = Modifier.weight(1f).padding(start = 8.dp)
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.Close,
+                        contentDescription = "Missed",
+                        tint = Color(0xFFE53935)
+                    )
+                    Spacer(modifier = Modifier.width(4.dp))
+                    Text("Mark as Missed", color = Color(0xFFE53935))
+                }
             }
         }
     }
 
-    // Confirmation dialog
+    // Confirmation dialog with improved UX
     if (showConfirmationDialog) {
         val isTaken = confirmationType == "taken"
 
         AlertDialog(
             onDismissRequest = { showConfirmationDialog = false },
-            title = { Text(text = if (isTaken) "Confirm Medication Taken" else "Missed Medication") },
-            text = {
+            title = {
                 Text(
-                    text = if (isTaken)
-                        "Did you take ${currentMedication.name} (${currentMedication.dosage})?"
-                    else
-                        "Are you sure you missed your ${currentMedication.name}? This may affect your treatment."
+                    text = if (isTaken) "Confirm Medication Taken" else "Missed Medication",
+                    style = MaterialTheme.typography.titleLarge
                 )
+            },
+            text = {
+                Column {
+                    Text(
+                        text = currentMedication.name,
+                        style = MaterialTheme.typography.titleMedium,
+                        color = PrimaryDark
+                    )
+                    Spacer(modifier = Modifier.height(4.dp))
+                    Text(
+                        text = "${currentMedication.dose} at ${currentMedication.time}",
+                        style = MaterialTheme.typography.bodyMedium
+                    )
+                    Spacer(modifier = Modifier.height(8.dp))
+                    Text(
+                        text = if (isTaken)
+                            "Did you take this medication?"
+                        else
+                            "Are you sure you missed your medication? This may affect your treatment."
+                    )
+                }
             },
             confirmButton = {
                 Button(
@@ -225,8 +284,10 @@ fun MedicationIntakeSlider(
                         containerColor = if (isTaken) Color(0xFF4CAF50) else Color(0xFFE53935)
                     )
                 ) {
-                    Text(if (isTaken) "Yes, Confirm" else "Yes, I Missed It",
-                        color = SecondaryLight)
+                    Text(
+                        if (isTaken) "Yes, Confirm" else "Yes, I Missed It",
+                        color = Color.White
+                    )
                 }
             },
             dismissButton = {
@@ -238,7 +299,7 @@ fun MedicationIntakeSlider(
     }
 }
 
-// Dot indicator for medication navigation
+// Dot indicator for medication navigation - unchanged
 @Composable
 fun DotIndicator(
     selected: Boolean,
@@ -253,20 +314,16 @@ fun DotIndicator(
             .clickable(onClick = onClick)
     )
 }
-
-@Preview(showBackground = true)
-@Composable
-fun PreviewMedicationIntakeSlider() {
-    val sampleMedications = listOf(
-        Medication("1", "Aspirin", "100mg", "8:00 AM" ),
-        Medication("2", "Insulin", "10 units", "9:00 AM" ),
-        Medication("3", "Blood Pressure Med", "5mg", "10:00 AM" ),
-        Medication("4", "Pain Killer", "500mg", "11:00 AM" )
-    )
-
-    MedicationIntakeSlider(
-        medications = sampleMedications,
-        onMedicationTaken = { /* Handle taken action */ },
-        onMedicationMissed = { /* Handle missed action */ }
-    )
-}
+//@Preview(showBackground = true)
+//@Composable
+//fun PreviewMedicationIntakeSlider() {
+//    val sampleMedications = listOf(
+//
+//    )
+//
+//    MedicationIntakeSlider(
+//        medications = sampleMedications,
+//        onMedicationTaken = { /* Handle taken action */ },
+//        onMedicationMissed = { /* Handle missed action */ }
+//    )
+//}
