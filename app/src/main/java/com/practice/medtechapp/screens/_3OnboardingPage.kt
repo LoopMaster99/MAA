@@ -14,8 +14,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.compose.rememberNavController
+import com.practice.medtechapp.R
 import com.practice.medtechapp.ui.theme.AppTypography
 import com.practice.medtechapp.ui.theme.PrimaryDark
 import com.practice.medtechapp.ui.theme.SecondaryDark
@@ -47,16 +50,24 @@ fun OnboardingPage(pageData: OnboardingPageData) {
             textAlign = TextAlign.Center
         )
 
-        Spacer(modifier = Modifier.height(10.dp))
+        Spacer(modifier = Modifier.height(18.dp))
 
         Text(
             text = pageData.description,
-            fontSize = 16.sp,
+            fontSize = 18.sp,
             color = SecondaryDark,
             style = AppTypography.bodyLarge,
             textAlign = TextAlign.Center,
             modifier = Modifier.padding(horizontal = 16.dp)
         )
     }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun OnboardingPagePreview(){
+    OnboardingPage(pageData = OnboardingPageData(R.drawable.capsule,
+        "Welcome",
+        "Easily track and manage your medications with smart reminders."))
 }
 
