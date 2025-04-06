@@ -40,15 +40,15 @@ fun MedicationCard(
     modifier: Modifier = Modifier
 ) {
     val cardColor = when(medication.status) {
-        "taken" -> Color(0xFFE8F5E9)  // Light green background for taken
-        "missed" -> Color(0xFFFFEBEE)  // Light red background for missed
+        "taken" -> Color(0xFFE8F5E9)
+        "missed" -> Color(0xFFFFEBEE)
         else -> Color.White
     }
 
     val timeColor = when {
-        medication.time.contains("now", ignoreCase = true) -> Color(0xFFE53935)  // Red for "now"
-        medication.time.contains("soon", ignoreCase = true) -> Color(0xFFFF9800)  // Orange for "soon"
-        else -> Color(0xFF616161)  // Regular gray for other times
+        medication.time.contains("now", ignoreCase = true) -> Color(0xFFE53935)
+        medication.time.contains("soon", ignoreCase = true) -> Color(0xFFFF9800)
+        else -> Color(0xFF616161)
     }
 
     Card(
@@ -65,7 +65,6 @@ fun MedicationCard(
                 .padding(16.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            // Pill icon or medication type icon
             Box(
                 modifier = Modifier
                     .size(48.dp)
@@ -82,7 +81,6 @@ fun MedicationCard(
 
             Spacer(modifier = Modifier.width(16.dp))
 
-            // Medication details
             Column(modifier = Modifier.weight(1f)) {
                 Text(
                     text = medication.name,
@@ -99,7 +97,6 @@ fun MedicationCard(
                 )
             }
 
-            // Time indicator
             Column(horizontalAlignment = Alignment.End) {
                 Text(
                     text = medication.time,
@@ -108,7 +105,6 @@ fun MedicationCard(
                     fontWeight = FontWeight.Bold
                 )
 
-                // Status indicator if already taken or missed
                 if (medication.status == "taken" || medication.status == "missed") {
                     Spacer(modifier = Modifier.height(4.dp))
                     Row(verticalAlignment = Alignment.CenterVertically) {
@@ -133,11 +129,3 @@ fun MedicationCard(
         }
     }
 }
-
-//@Preview(showBackground = true)
-//@Composable
-//fun MedicationCardPreview() {
-//    MedicationCard(
-//
-//    )
-//}

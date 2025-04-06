@@ -1,35 +1,89 @@
 package com.practice.medtechapp.screens
 
-import androidx.compose.foundation.Image
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.*
-import androidx.compose.material.icons.outlined.*
-import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.material.icons.automirrored.filled.ExitToApp
+import androidx.compose.material.icons.automirrored.filled.KeyboardArrowRight
+import androidx.compose.material.icons.filled.AddCircle
+import androidx.compose.material.icons.filled.Build
+import androidx.compose.material.icons.filled.Call
+import androidx.compose.material.icons.filled.Clear
+import androidx.compose.material.icons.filled.DateRange
+import androidx.compose.material.icons.filled.Edit
+import androidx.compose.material.icons.filled.Email
+import androidx.compose.material.icons.filled.Emergency
+import androidx.compose.material.icons.filled.ExitToApp
+import androidx.compose.material.icons.filled.Favorite
+import androidx.compose.material.icons.filled.Home
+import androidx.compose.material.icons.filled.Info
+import androidx.compose.material.icons.filled.KeyboardArrowRight
+import androidx.compose.material.icons.filled.Lock
+import androidx.compose.material.icons.filled.Notifications
+import androidx.compose.material.icons.filled.Person
+import androidx.compose.material.icons.filled.PersonPin
+import androidx.compose.material.icons.filled.Phone
+import androidx.compose.material3.BottomAppBar
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.Divider
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.NavigationBar
+import androidx.compose.material3.NavigationBarItem
+import androidx.compose.material3.NavigationBarItemDefaults
+import androidx.compose.material3.OutlinedButton
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
+import com.practice.medtechapp.ui.theme.BackgroundLight
+import com.practice.medtechapp.ui.theme.PrimaryDark
+import com.practice.medtechapp.ui.theme.PrimaryLight
+import com.practice.medtechapp.ui.theme.SecondaryDark
+import com.practice.medtechapp.ui.theme.TextColor
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ProfileScreen(
     onNavigateToHome: () -> Unit,
-    onNavigateToMedications: () -> Unit
+    onNavigateToSchedule: () -> Unit
 ) {
     val userDetails = remember {
         UserProfile(
             name = "Krishna M",
+            id = "469213",
             email = "krishna@example.com",
             phone = "+1 (555) 123-4567",
             emergencyContact = "Rahul M: +1 (555) 765-4321",
@@ -40,45 +94,69 @@ fun ProfileScreen(
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text("Profile") },
+                title = { Text("Profile", color = BackgroundLight) },
                 colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = MaterialTheme.colorScheme.primaryContainer
+                    containerColor = PrimaryDark
                 )
             )
         },
+        containerColor = BackgroundLight,
         bottomBar = {
-            BottomAppBar {
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceEvenly
-                ) {
-                    IconButton(onClick = onNavigateToHome) {
-                        Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                            Icon(Icons.Default.Home, contentDescription = "Home")
-                            Text("Home", fontSize = 12.sp)
-                        }
-                    }
-                    IconButton(onClick = onNavigateToMedications) {
-                        Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                            Icon(Icons.Default.DateRange, contentDescription = "Schedule")
-                            Text("Schedule", fontSize = 12.sp)
-                        }
-                    }
-                    IconButton(onClick = {}) {
-                        Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                            Icon(
-                                Icons.Default.Person,
-                                contentDescription = "Profile",
-                                tint = MaterialTheme.colorScheme.primary
-                            )
-                            Text(
-                                "Profile",
-                                fontSize = 12.sp,
-                                color = MaterialTheme.colorScheme.primary
-                            )
-                        }
-                    }
-                }
+            NavigationBar(
+                containerColor = PrimaryDark,
+                contentColor = BackgroundLight
+            ) {
+                NavigationBarItem(
+                    selected = false,
+                    onClick = onNavigateToHome,
+                    icon = {
+                        Icon(
+                            Icons.Default.Home,
+                            contentDescription = "Home",
+                            tint = Color(0xFFA68763)
+                        )
+                    },
+                    colors = NavigationBarItemDefaults.colors(
+                        selectedIconColor = PrimaryLight,
+                        unselectedIconColor = Color(0xFFA68763),
+                        indicatorColor = SecondaryDark
+                    ),
+                    label = { Text("Home", color = Color(0xFFA68763)) }
+                )
+                NavigationBarItem(
+                    selected = false,
+                    onClick = onNavigateToSchedule,
+                    icon = {
+                        Icon(
+                            Icons.Default.DateRange,
+                            contentDescription = "Schedule",
+                            tint = Color(0xFFA68763)
+                        )
+                    },
+                    colors = NavigationBarItemDefaults.colors(
+                        selectedIconColor = PrimaryLight,
+                        unselectedIconColor = Color(0xFFA68763),
+                        indicatorColor = SecondaryDark
+                    ),
+                    label = { Text("Schedule", color = Color(0xFFA68763)) }
+                )
+                NavigationBarItem(
+                    selected = true,
+                    onClick = { },
+                    icon = {
+                        Icon(
+                            Icons.Default.Person,
+                            contentDescription = "Profile",
+                            tint = PrimaryLight
+                        )
+                    },
+                    colors = NavigationBarItemDefaults.colors(
+                        selectedIconColor = PrimaryLight,
+                        unselectedIconColor = Color(0xFFA68763),
+                        indicatorColor = SecondaryDark
+                    ),
+                    label = { Text("Profile", color = PrimaryLight) }
+                )
             }
         }
     ) { paddingValues ->
@@ -90,21 +168,23 @@ fun ProfileScreen(
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             item {
-                ProfileHeader(userDetails.name)
+                ProfileHeader(userDetails.name, userDetails.id)
                 Spacer(modifier = Modifier.height(24.dp))
                 PersonalInformationSection(userDetails)
                 Spacer(modifier = Modifier.height(16.dp))
-                Divider()
+                HorizontalDivider(color = Color(0xFFE6D9C2))
                 Spacer(modifier = Modifier.height(16.dp))
                 MedicalInformationSection()
                 Spacer(modifier = Modifier.height(16.dp))
-                Divider()
+                HorizontalDivider(color = Color(0xFFE6D9C2))
                 Spacer(modifier = Modifier.height(16.dp))
                 AppSettingsSection()
                 Spacer(modifier = Modifier.height(16.dp))
-                Divider()
+                HorizontalDivider(color = Color(0xFFE6D9C2))
                 Spacer(modifier = Modifier.height(16.dp))
-                LogoutButton()
+                LogoutButton(
+                    navController = NavController(context = LocalContext.current)
+                )
                 Spacer(modifier = Modifier.height(32.dp))
             }
         }
@@ -113,6 +193,7 @@ fun ProfileScreen(
 
 data class UserProfile(
     val name: String,
+    val id: String,
     val email: String,
     val phone: String,
     val emergencyContact: String,
@@ -120,7 +201,7 @@ data class UserProfile(
 )
 
 @Composable
-fun ProfileHeader(name: String) {
+fun ProfileHeader(name: String, id: String) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = Modifier.padding(vertical = 16.dp)
@@ -129,14 +210,14 @@ fun ProfileHeader(name: String) {
             modifier = Modifier
                 .size(100.dp)
                 .clip(CircleShape)
-                .background(MaterialTheme.colorScheme.primary.copy(alpha = 0.2f)),
+                .background(PrimaryLight.copy(alpha = 0.2f)),
             contentAlignment = Alignment.Center
         ) {
             Icon(
                 Icons.Default.Person,
                 contentDescription = "Profile Picture",
                 modifier = Modifier.size(60.dp),
-                tint = MaterialTheme.colorScheme.primary
+                tint = PrimaryDark
             )
         }
 
@@ -145,12 +226,23 @@ fun ProfileHeader(name: String) {
         Text(
             name,
             fontSize = 24.sp,
-            fontWeight = FontWeight.Bold
+            fontWeight = FontWeight.Bold,
+            color = TextColor
+        )
+
+        Text(id,
+            fontSize = 16.sp,
+            fontWeight = FontWeight.Bold,
+            color = TextColor
         )
 
         OutlinedButton(
             onClick = { /* Edit profile action */ },
-            modifier = Modifier.padding(top = 8.dp)
+            modifier = Modifier.padding(top = 8.dp),
+            colors = ButtonDefaults.outlinedButtonColors(
+                contentColor = PrimaryDark
+            ),
+            border = BorderStroke(1.dp, PrimaryDark)
         ) {
             Icon(Icons.Default.Edit, contentDescription = "Edit")
             Spacer(modifier = Modifier.width(8.dp))
@@ -166,6 +258,7 @@ fun PersonalInformationSection(userProfile: UserProfile) {
             "Personal Information",
             fontSize = 18.sp,
             fontWeight = FontWeight.Bold,
+            color = PrimaryDark,
             modifier = Modifier.padding(bottom = 16.dp)
         )
 
@@ -182,16 +275,62 @@ fun PersonalInformationSection(userProfile: UserProfile) {
         )
 
         ProfileInfoItem(
-            icon = Icons.Default.Call,
+            icon = Icons.Default.Emergency,
             title = "Emergency Contact",
             value = userProfile.emergencyContact
         )
 
         ProfileInfoItem(
-            icon = Icons.Default.Build,
+            icon = Icons.Default.PersonPin,
             title = "Doctor",
             value = userProfile.doctorInfo
         )
+    }
+}
+
+@Composable
+fun ProfileInfoItem(icon: ImageVector, title: String, value: String) {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(vertical = 8.dp),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Card(
+            modifier = Modifier.size(40.dp),
+            colors = CardDefaults.cardColors(
+                containerColor = Color(0xFFE6D9C2)
+            )
+        ) {
+            Box(
+                modifier = Modifier.fillMaxSize(),
+                contentAlignment = Alignment.Center
+            ) {
+                Icon(
+                    icon,
+                    contentDescription = title,
+                    tint = PrimaryDark,
+                    modifier = Modifier.size(20.dp)
+                )
+            }
+        }
+
+        Column(
+            modifier = Modifier
+                .padding(start = 16.dp)
+                .weight(1f)
+        ) {
+            Text(
+                title,
+                fontSize = 14.sp,
+                color = Color.Gray
+            )
+            Text(
+                value,
+                fontSize = 16.sp,
+                color = TextColor
+            )
+        }
     }
 }
 
@@ -202,6 +341,7 @@ fun MedicalInformationSection() {
             "Medical Information",
             fontSize = 18.sp,
             fontWeight = FontWeight.Bold,
+            color = PrimaryDark,
             modifier = Modifier.padding(bottom = 16.dp)
         )
 
@@ -232,6 +372,7 @@ fun AppSettingsSection() {
             "App Settings",
             fontSize = 18.sp,
             fontWeight = FontWeight.Bold,
+            color = PrimaryDark,
             modifier = Modifier.padding(bottom = 16.dp)
         )
 
@@ -256,83 +397,65 @@ fun AppSettingsSection() {
 }
 
 @Composable
-fun ProfileInfoItem(icon: androidx.compose.ui.graphics.vector.ImageVector, title: String, value: String) {
+fun SettingsItem(icon: ImageVector, title: String, onClick: () -> Unit) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(vertical = 8.dp),
+            .clickable(onClick = onClick)
+            .padding(vertical = 12.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
-        Icon(
-            imageVector = icon,
-            contentDescription = null,
-            tint = MaterialTheme.colorScheme.primary,
-            modifier = Modifier.size(24.dp)
-        )
-
-        Column(
-            modifier = Modifier
-                .weight(1f)
-                .padding(start = 16.dp)
+        Card(
+            modifier = Modifier.size(40.dp),
+            colors = CardDefaults.cardColors(
+                containerColor = Color(0xFFE6D9C2)
+            )
         ) {
-            Text(
-                title,
-                fontSize = 14.sp,
-                color = Color.Gray
-            )
-
-            Text(
-                value,
-                fontSize = 16.sp
-            )
+            Box(
+                modifier = Modifier.fillMaxSize(),
+                contentAlignment = Alignment.Center
+            ) {
+                Icon(
+                    icon,
+                    contentDescription = title,
+                    tint = PrimaryDark,
+                    modifier = Modifier.size(20.dp)
+                )
+            }
         }
-    }
-}
-
-@Composable
-fun SettingsItem(icon: androidx.compose.ui.graphics.vector.ImageVector, title: String, onClick: () -> Unit) {
-    Row(
-        modifier = Modifier.run {
-            fillMaxWidth()
-                .padding(vertical = 12.dp)
-                .clickable(onClick = onClick)
-        },
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        Icon(
-            imageVector = icon,
-            contentDescription = null,
-            tint = MaterialTheme.colorScheme.primary,
-            modifier = Modifier.size(24.dp)
-        )
 
         Text(
             title,
             fontSize = 16.sp,
+            color = TextColor,
             modifier = Modifier
                 .weight(1f)
                 .padding(start = 16.dp)
         )
 
         Icon(
-            Icons.Default.KeyboardArrowRight,
+            Icons.AutoMirrored.Filled.KeyboardArrowRight,
             contentDescription = "Navigate",
-            tint = Color.Gray
+            tint = Color.Gray,
+            modifier = Modifier.size(24.dp)
         )
     }
 }
 
 @Composable
-fun LogoutButton() {
+fun LogoutButton(navController: NavController) {
     Button(
-        onClick = { /* Logout action */ },
+        onClick = { navController.navigate("signIn") },
         colors = ButtonDefaults.buttonColors(
-            containerColor = MaterialTheme.colorScheme.errorContainer,
-            contentColor = MaterialTheme.colorScheme.error
+            containerColor = SecondaryDark,
+            contentColor = Color.White
         ),
         modifier = Modifier.fillMaxWidth()
     ) {
-        Icon(Icons.Default.Clear, contentDescription = "Logout")
+        Icon(
+            Icons.AutoMirrored.Filled.ExitToApp,
+            contentDescription = "Logout"
+        )
         Spacer(modifier = Modifier.width(8.dp))
         Text("Logout")
     }

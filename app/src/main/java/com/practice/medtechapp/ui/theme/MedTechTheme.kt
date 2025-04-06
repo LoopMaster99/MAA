@@ -23,18 +23,18 @@ val TextColor = Color(0xFF2D2D2D)
 
 
 // Additional Color Variations
-val AccentColor = Color(0xFF8B4513)  // A rich brown for highlights
-val SuccessColor = Color(0xFF4CAF50)  // Green for positive actions
-val ErrorColor = Color(0xFFFF5722)   // Vibrant red for errors or critical actions
-val WarningColor = Color(0xFFFFC107) // Amber for warnings
+val AccentColor = Color(0xFF8B4513)
+val SuccessColor = Color(0xFF4CAF50)
+val ErrorColor = Color(0xFFFF5722)
+val WarningColor = Color(0xFFFFC107)
 
 // Extended Theme Colors
-val BackgroundDark = Color(0xFFE0D5C1)  // Slightly darker background option
-val TextSecondary = Color(0xFF6E6E6E)   // Secondary text color
+val BackgroundDark = Color(0xFFE0D5C1)
+val TextSecondary = Color(0xFF6E6E6E)
 
 // Card and Container Colors
-val CardBackground = Color(0xFFF5F0E6)  // Soft background for cards
-val CardBorder = Color(0xFFD3C1A8)      // Border color for cards
+val CardBackground = Color(0xFFF5F0E6)
+val CardBorder = Color(0xFFD3C1A8)
 
 // State Colors
 val ActiveColor = SecondaryDark

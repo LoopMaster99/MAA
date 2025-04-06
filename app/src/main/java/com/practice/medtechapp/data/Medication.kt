@@ -5,5 +5,5 @@ data class Medication(
     val name: String,
     val dose: String,
     val time: String,
-    val status: String = "pending" // Added with default value of "pending"
+    val status: String = "pending"
 )

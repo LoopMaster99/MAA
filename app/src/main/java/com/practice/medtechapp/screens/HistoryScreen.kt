@@ -2,10 +2,13 @@ package com.practice.medtechapp.screens
 
 import android.os.Build
 import androidx.annotation.RequiresApi
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -15,6 +18,10 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.practice.medtechapp.ui.theme.BackgroundLight
+import com.practice.medtechapp.ui.theme.PrimaryDark
+import com.practice.medtechapp.ui.theme.SecondaryDark
+import com.practice.medtechapp.ui.theme.TextColor
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 
@@ -68,17 +75,22 @@ fun HistoryScreen(
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text("Medication History") },
+                title = { Text("Medication History", color = BackgroundLight) },
                 navigationIcon = {
                     IconButton(onClick = onNavigateBack) {
-                        Icon(Icons.Default.ArrowBack, contentDescription = "Go back")
+                        Icon(
+                            Icons.AutoMirrored.Filled.ArrowBack,
+                            contentDescription = "Go back",
+                            tint = BackgroundLight
+                        )
                     }
                 },
                 colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = MaterialTheme.colorScheme.primaryContainer
+                    containerColor = PrimaryDark
                 )
             )
-        }
+        },
+        containerColor = BackgroundLight
     ) { paddingValues ->
         Column(
             modifier = Modifier
@@ -94,6 +106,7 @@ fun HistoryScreen(
                 "Medication History",
                 fontSize = 20.sp,
                 fontWeight = FontWeight.Bold,
+                color = PrimaryDark,
                 modifier = Modifier.padding(vertical = 8.dp)
             )
 
@@ -114,6 +127,7 @@ fun HistoryScreen(
                             dateString,
                             fontSize = 18.sp,
                             fontWeight = FontWeight.SemiBold,
+                            color = SecondaryDark,
                             modifier = Modifier.padding(vertical = 8.dp)
                         )
                     }
@@ -131,7 +145,10 @@ fun HistoryScreen(
 fun AdherenceCard(adherenceRate: Float) {
     Card(
         modifier = Modifier.fillMaxWidth(),
-        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
+        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
+        colors = CardDefaults.cardColors(
+            containerColor = Color(0xFFE6D9C2)
+        )
     ) {
         Column(
             modifier = Modifier
@@ -141,7 +158,8 @@ fun AdherenceCard(adherenceRate: Float) {
             Text(
                 "Medication Adherence",
                 fontSize = 18.sp,
-                fontWeight = FontWeight.Bold
+                fontWeight = FontWeight.Bold,
+                color = PrimaryDark
             )
 
             Spacer(modifier = Modifier.height(8.dp))
@@ -169,7 +187,10 @@ fun AdherenceCard(adherenceRate: Float) {
                         else -> "Poor adherence. Try to take your medications on time."
                     }
 
-                    Text(adherenceMessage)
+                    Text(
+                        adherenceMessage,
+                        color = TextColor
+                    )
                 }
             }
 
@@ -182,7 +203,8 @@ fun AdherenceCard(adherenceRate: Float) {
                     adherenceRate >= 80 -> Color(0xFF4CAF50)
                     adherenceRate >= 50 -> Color(0xFFFFC107)
                     else -> Color(0xFFF44336)
-                }
+                },
+                trackColor = Color.LightGray.copy(alpha = 0.3f)
             )
         }
     }
@@ -195,7 +217,10 @@ fun HistoryMedicationCard(medication: MedicationHistory) {
         modifier = Modifier
             .fillMaxWidth()
             .padding(vertical = 4.dp),
-        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
+        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
+        colors = CardDefaults.cardColors(
+            containerColor = Color.White
+        )
     ) {
         Row(
             modifier = Modifier
@@ -203,31 +228,38 @@ fun HistoryMedicationCard(medication: MedicationHistory) {
                 .fillMaxWidth(),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            // Status icon
-            when (medication.status) {
-                "completed" -> {
-                    Icon(
-                        Icons.Default.CheckCircle,
-                        contentDescription = "Completed",
-                        tint = Color(0xFF4CAF50),
-                        modifier = Modifier.size(40.dp)
-                    )
-                }
-                "missed" -> {
-                    Icon(
-                        Icons.Default.Clear,
-                        contentDescription = "Missed",
-                        tint = Color(0xFFF44336),
-                        modifier = Modifier.size(40.dp)
-                    )
-                }
-                else -> {
-                    Icon(
-                        Icons.Default.DateRange,
-                        contentDescription = "Pending",
-                        tint = Color(0xFFFFC107),
-                        modifier = Modifier.size(40.dp)
-                    )
+            // Status icon with background circle
+            Box(
+                modifier = Modifier
+                    .size(48.dp)
+                    .background(Color(0xFFE6D9C2), CircleShape),
+                contentAlignment = Alignment.Center
+            ) {
+                when (medication.status) {
+                    "completed" -> {
+                        Icon(
+                            Icons.Default.CheckCircle,
+                            contentDescription = "Completed",
+                            tint = Color(0xFF4CAF50),
+                            modifier = Modifier.size(28.dp)
+                        )
+                    }
+                    "missed" -> {
+                        Icon(
+                            Icons.Default.Clear,
+                            contentDescription = "Missed",
+                            tint = Color(0xFFF44336),
+                            modifier = Modifier.size(28.dp)
+                        )
+                    }
+                    else -> {
+                        Icon(
+                            Icons.Default.DateRange,
+                            contentDescription = "Pending",
+                            tint = Color(0xFFFFC107),
+                            modifier = Modifier.size(28.dp)
+                        )
+                    }
                 }
             }
 
@@ -237,7 +269,8 @@ fun HistoryMedicationCard(medication: MedicationHistory) {
                 Text(
                     medication.name,
                     fontSize = 18.sp,
-                    fontWeight = FontWeight.Bold
+                    fontWeight = FontWeight.Bold,
+                    color = PrimaryDark
                 )
 
                 Text(

@@ -86,13 +86,13 @@ fun HomeScreen(
                 "1", "Aspirin", "100mg", "8:00 AM"
             ),
             Medication(
-                "2", "Insulin", "10 units", "9:00 AM"
+                "2", "Levo Citrazen", "10 units", "9:00 AM"
             ),
             Medication(
-                "3", "Blood Pressure", "5mg", "10:00 AM"
+                "3", "Telmikind-H", "5mg", "10:00 AM"
             ),
             Medication(
-                "4", "Pain Killer", "500mg", "11:00 AM"
+                "4", "Brufen", "500mg", "11:00 AM"
             )
         )
     }

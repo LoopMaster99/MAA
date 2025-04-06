@@ -1,6 +1,8 @@
 package com.practice.medtechapp.screens
 
 import androidx.annotation.DrawableRes
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.tooling.preview.Preview
 import com.practice.medtechapp.R
 
 data class OnboardingPageData(
@@ -36,3 +38,4 @@ val onboardingPages = listOf(
         "Your data is safe, and the app is designed for effortless use."
     )
 )
+

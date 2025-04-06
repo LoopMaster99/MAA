@@ -60,7 +60,6 @@ fun MedicationIntakeSlider(
     onMedicationMissed: (Medication) -> Unit
 ) {
     if (medications.isEmpty()) {
-        // Display empty state
         Box(
             modifier = Modifier
                 .fillMaxWidth()
@@ -92,11 +91,9 @@ fun MedicationIntakeSlider(
     val currentMedication = medications[currentMedicationIndex]
     val coroutineScope = rememberCoroutineScope()
 
-    // State for showing confirmation dialog
     var showConfirmationDialog by remember { mutableStateOf(false) }
     var confirmationType by remember { mutableStateOf<String?>(null) }
 
-    // Animated highlight position
     val highlightTransition = updateTransition(targetState = currentMedicationIndex, label = "highlightTransition")
     val highlightAlpha by highlightTransition.animateFloat(
         transitionSpec = { tween(300) },
@@ -104,12 +101,11 @@ fun MedicationIntakeSlider(
     ) { 1f }
 
     Column(modifier = Modifier.fillMaxWidth()) {
-        // Dynamic medication cards with swipeable functionality
         medications.forEachIndexed { index, medication ->
             val isSelected = index == currentMedicationIndex
 
             Box(modifier = Modifier.fillMaxWidth()) {
-                // The medication card
+
                 MedicationCard(
                     medication = medication,
                     isSelected = isSelected,
@@ -224,7 +220,7 @@ fun MedicationIntakeSlider(
         }
     }
 
-    // Confirmation dialog with improved UX
+
     if (showConfirmationDialog) {
         val isTaken = confirmationType == "taken"
 
@@ -261,18 +257,18 @@ fun MedicationIntakeSlider(
                 Button(
                     onClick = {
                         if (isTaken) {
-                            // Create a copy with updated status
+
                             val updatedMedication = currentMedication.copy(status = "taken")
                             onMedicationTaken(updatedMedication)
                         } else {
-                            // Create a copy with updated status
+
                             val updatedMedication = currentMedication.copy(status = "missed")
                             onMedicationMissed(updatedMedication)
                         }
 
                         showConfirmationDialog = false
 
-                        // Move to the next medication if available
+
                         coroutineScope.launch {
                             delay(300) // Small delay for visual feedback
                             if (currentMedicationIndex < medications.size - 1) {
@@ -299,7 +295,7 @@ fun MedicationIntakeSlider(
     }
 }
 
-// Dot indicator for medication navigation - unchanged
+
 @Composable
 fun DotIndicator(
     selected: Boolean,
@@ -314,16 +310,3 @@ fun DotIndicator(
             .clickable(onClick = onClick)
     )
 }
-//@Preview(showBackground = true)
-//@Composable
-//fun PreviewMedicationIntakeSlider() {
-//    val sampleMedications = listOf(
-//
-//    )
-//
-//    MedicationIntakeSlider(
-//        medications = sampleMedications,
-//        onMedicationTaken = { /* Handle taken action */ },
-//        onMedicationMissed = { /* Handle missed action */ }
-//    )
-//}

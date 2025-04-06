@@ -12,55 +12,49 @@ import com.practice.medtechapp.screens.HomeScreen
 import com.practice.medtechapp.screens.MedicationsScreen
 import com.practice.medtechapp.screens.OnboardingScreen
 import com.practice.medtechapp.screens.ProfileScreen
+import com.practice.medtechapp.screens.RegisterScreen
+import com.practice.medtechapp.screens.ScheduleScreen
 import com.practice.medtechapp.screens.SignInScreen
 import com.practice.medtechapp.screens.SignUpScreen
 import com.practice.medtechapp.screens.SplashScreen
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
-fun AppNavigation(navController: NavHostController) {
+fun AppNavigation(navController: NavHostController, medications: List<Medication>) {
 
     NavHost(navController = navController, startDestination = "splash") {
         composable("splash") { SplashScreen(navController) }
         composable("onboarding") { OnboardingScreen(navController) }
-        //composable("Register") { RegisterScreen(navController) }
+        composable("register") { RegisterScreen(navController) }
         composable("signIn") { SignInScreen(navController) }
         composable("signUp") { SignUpScreen(navController) }
         composable("home") {
-            // Sample medications for today with status
-            val medications = listOf(
-                Medication("1", "Aspirin", "100mg", "8:00 AM", "pending"),
-                Medication("2", "Insulin", "10 units", "9:00 AM", "pending"),
-                Medication("3", "Blood Pressure", "5mg", "10:00 AM", "pending")
-            )
 
             HomeScreen(
-                userName = "Krishnamm/",
+                userName = "Krishna",
                 medications = medications,
                 onNavigateToHistory = {
-                    // This could now be repurposed for some other function
-                    // or kept as history view
+
                     navController.navigate("history")
                 },
                 onNavigateToSchedule = {
-                    // This now navigates to the medications list/upcoming view
-                    navController.navigate("medications")
+
+                    navController.navigate("schedule")
                 },
                 onNavigateToProfile = {
                     navController.navigate("profile")
                 }
             )
         }
-        composable("medications") {
-            // Medications/Schedule screen
-            MedicationsScreen(
-                onNavigateToHome = {
-                    navController.navigate("home") {
-                        popUpTo("home") { inclusive = true }
-                    }
+        composable("schedule") {
+
+            ScheduleScreen(
+                medications = medications,  // Pass your medications list
+                onNavigateBack = {
+                    navController.popBackStack()
                 },
-                onNavigateToProfile = {
-                    navController.navigate("profile")
+                onUpdateMedication = { updatedMedication ->
+
                 }
             )
         }
@@ -71,12 +65,12 @@ fun AppNavigation(navController: NavHostController) {
                         popUpTo("home") { inclusive = true }
                     }
                 },
-                onNavigateToMedications = {
-                    navController.navigate("medications")
+                onNavigateToSchedule = {
+                    navController.navigate("schedule")
                 }
             )
         }
-        // Keep history screen if you're still using it
+
         composable("history") {
             HistoryScreen(
                 onNavigateBack = {

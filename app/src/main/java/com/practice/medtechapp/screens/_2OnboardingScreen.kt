@@ -75,7 +75,7 @@ fun OnboardingScreen(navController: NavController) {
                         if (pagerState.currentPage < onboardingPages.lastIndex) {
                             pagerState.animateScrollToPage(pagerState.currentPage + 1)
                         } else {
-                            navController.navigate("signIn")
+                            navController.navigate("register")
                         }
                     }
                 },
